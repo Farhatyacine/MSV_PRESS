@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
+import Footer from './Footer';
+import Header from './Header';
+import { BrowserRouter, Route } from "react-router-dom";
+import ArticleList from './ArticlesList';
+
 
 class App extends Component {
   render() {
     return (
+
       <div>
-          <h1>Bonjour plazma</h1>
+        
+        <Header/>
+        <ArticleList/>
+        <Footer/>
       </div>
+      
+
     );
   }
 }
