@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () =>{
     return (
@@ -42,37 +43,13 @@ const Header = () =>{
                 <div className="collapse navbar-collapse" id="navbarMenu">
                     <ul className="navbar-nav mx-auto">
                     <li className="nav-item">
-                        <a className="nav-link active" href="index-2.html">Home</a>
+                        <Link to={"/home"} className="nav-link active" >Home</Link>
                     </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="category.html" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Travel</a>
-                        <div className="dropdown-menu" aria-labelledby="dropdown04">
-                        <a className="dropdown-item" href="category.html">Asia</a>
-                        <a className="dropdown-item" href="category.html">Europe</a>
-                        <a className="dropdown-item" href="category.html">Dubai</a>
-                        <a className="dropdown-item" href="category.html">Africa</a>
-                        <a className="dropdown-item" href="category.html">South America</a>
-                        </div>
-
-                    </li>
-
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="category.html" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categories</a>
-                        <div className="dropdown-menu" aria-labelledby="dropdown05">
-                        <a className="dropdown-item" href="category.html">Lifestyle</a>
-                        <a className="dropdown-item" href="category.html">Food</a>
-                        <a className="dropdown-item" href="category.html">Adventure</a>
-                        <a className="dropdown-item" href="category.html">Travel</a>
-                        <a className="dropdown-item" href="category.html">Business</a>
-                        </div>
-
-                    </li>
+                    
                     <li className="nav-item">
-                        <a className="nav-link" href="about.html">About</a>
+                        <Link to={"/login"} className="nav-link" >New Article</Link>
                     </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="contact.html">Contact</a>
-                    </li>
+                    
                     </ul>
                     
                 </div>
