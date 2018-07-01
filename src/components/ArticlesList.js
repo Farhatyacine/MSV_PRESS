@@ -3,19 +3,17 @@ import {Query} from "react-apollo";
 import gql from "graphql-tag";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {AUTH_TOKEN} from "../actions/types";
 
 class ArticlesList extends Component {
-
-    componentWillMount() {
-        if (this.props.loginToken == null) {
-            this.props.history.push('/login');
-        }
-    }
-
     renderArticlesList() {
-        return (
-            <Query
-                query={gql`
+        const authToken = localStorage.getItem(AUTH_TOKEN);
+        if (authToken.includes(null)) {
+            this.props.history.push('/login');
+        } else {
+            return (
+                <Query
+                    query={gql`
                 {
                     allPressArticles {
                     id
@@ -24,38 +22,39 @@ class ArticlesList extends Component {
                     }
                 }
                 `}
-            >
-                {({loading, error, data}) => {
-                    if (loading) return <p>Loading...</p>;
-                    if (error) return <p>Error : {error}</p>;
-                    console.log(data);
-                    return data.allPressArticles.map(({id, title, description}) => (
-                        <div key={id} className="col-md-6">
-                            <Link to={{
-                                pathname: '/singleArticle',
-                                state: {
-                                    article: {
-                                        id: id,
-                                        title: title,
-                                        description: description
+                >
+                    {({loading, error, data}) => {
+                        if (loading) return <p>Loading...</p>;
+                        if (error) return <p>Error : {error}</p>;
+                        console.log(data);
+                        return data.allPressArticles.map(({id, title, description}) => (
+                            <div key={id} className="col-md-6">
+                                <Link to={{
+                                    pathname: '/singleArticle',
+                                    state: {
+                                        article: {
+                                            id: id,
+                                            title: title,
+                                            description: description
+                                        }
                                     }
-                                }
-                            }} className="blog-entry ">
-                                <img src={`${process.env.PUBLIC_URL}/images/img_5.jpg`} alt=""/>
-                                <div className="blog-content-body">
-                                    <div className="post-meta">
-                                        <span className="category">Food</span>
-                                        <span className="mr-2">March 15, 2018 </span> ;
-                                        <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
+                                }} className="blog-entry ">
+                                    <img src={`${process.env.PUBLIC_URL}/images/img_5.jpg`} alt="aa"/>
+                                    <div className="blog-content-body">
+                                        <div className="post-meta">
+                                            <span className="category">Food</span>
+                                            <span className="mr-2">March 15, 2018 </span> ;
+                                            <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
+                                        </div>
+                                        <h2>{description}</h2>
                                     </div>
-                                    <h2>{description}</h2>
-                                </div>
-                            </Link>
-                        </div>
-                    ));
-                }}
-            </Query>
-        );
+                                </Link>
+                            </div>
+                        ));
+                    }}
+                </Query>
+            );
+        }
     }
 
 

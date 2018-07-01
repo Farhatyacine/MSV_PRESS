@@ -1,54 +1,30 @@
 import React, {Component} from "react";
 import {connect} from 'react-redux';
-import {graphql, Query, compose} from "react-apollo";
+import {graphql, compose} from "react-apollo";
 import gql from "graphql-tag";
+import {setUserlogin} from "../actions";
+import {AUTH_TOKEN} from "../actions/types";
 
 class Login extends Component {
-
-    login = async () => {
-        console.log(this.state);
-        return (<Query
-                query={gql`
-            {
-                allPressArticles {
-                id
-                title
-                description
-                }
-            }
-            `}
-            >
-                {({loading, error, data}) => {
-                    if (loading) return <p>Loading...</p>;
-                    if (error) return <p>Error :(</p>;
-                    console.log(data);
-                    return data.allPressArticles.map(({id, title, description}) => (
-                        <div key={id} className="col-md-6">
-                            <a href="blog-single.html" className="blog-entry ">
-                                <img src={`${process.env.PUBLIC_URL}/images/img_5.jpg`} alt=""/>
-                                <div className="blog-content-body">
-                                    <div className="post-meta">
-                                        <span className="category">Food</span>
-                                        <span className="mr-2">March 15, 2018 </span> ;
-                                        <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
-                                    </div>
-                                    <h2>{description}</h2>
-                                </div>
-                            </a>
-                        </div>
-                    ));
-                }}
-            </Query>
-        )
-
-
-    };
     _confirm = async () => {
         const {email, password} = this.state;
 
-        const result = await this.props.fetchArticlesmutation();
-        const {data} = result.data;
-        console.log(data)
+        const result = await this.props.loginMutation({
+            variables: {
+                email,
+                password,
+            }
+        });
+        const {authToken} = result.data.createUserToken;
+        this.props.setUserlogin(authToken);
+        this._saveUserData(authToken);
+        if (this.props.loginToken != null) {
+            this.props.history.push('/home');
+        }
+    };
+
+    _saveUserData = (token) => {
+        localStorage.setItem(AUTH_TOKEN, token)
     };
 
     constructor() {
@@ -120,26 +96,22 @@ class Login extends Component {
     }
 }
 
-
-const FETCH_ARTICLES = gql`
-  {
-    allPressArticles {
-    id
-    title
-    description
-    }
+function mapStateToProps({loginToken}) {
+    return {loginToken};
 }
-`;
 
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
+    createUserToken(email: $email, password: $password) {
+     user{
+      lastName
+      firstName
+    }
+    authToken
     }
   }
-`;
+`
 
-export default compose(
-    graphql(FETCH_ARTICLES, {name: 'fetchArticlesmutation'}),
-    graphql(LOGIN_MUTATION, {name: 'loginMutation'}),
-)(Login)
+export default connect(mapStateToProps, {setUserlogin})(compose(
+    graphql(LOGIN_MUTATION, {name: 'loginMutation'})
+)(Login));

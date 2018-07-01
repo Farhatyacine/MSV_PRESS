@@ -1,53 +1,16 @@
-import { LOGIN_STATUS, FETCH_ARTICLES} from './types';
-import axios from "axios";
+import { SET_USER_TOKEN, FETCH_ARTICLES} from './types';
 
-
-
-  
-
-  export const testLogin = async dispatch => {
-      const query=`mutation{
-        createUserToken(email:"haithem+test@monsupervoisin.fr",password:"password"){
-           user{
-             Address {
-               id
-             }
-             lastName
-             firstName 
-           }
-           authToken
-           error {
-             code
-             message
-           }
-         }
-        }`;
-     const variables = {};
-
-      
-    const response={};
-    try {
-      const response = await axios.get('https://dev.api.monsupervoisin.fr/graphql', {
-        query,
-        variables
-      });
-  
-      console.log(response.data)
-
-
-    } catch (error) {
-      console.log(error);
-    }
-
-
-      dispatch({ type: LOGIN_STATUS, payload: response.data });
-
-  }
-
-
-  export function fetchAllArticles(articles){
+export function fetchAllArticles(articles){
     return({
-      type : FETCH_ARTICLES,
-      payload : articles
+        type : FETCH_ARTICLES,
+        payload : articles
     })
-  }
+}
+
+
+export const setUserlogin = (token) => async dispatch => {
+    dispatch({
+        type : SET_USER_TOKEN,
+        payload : token
+    });
+};

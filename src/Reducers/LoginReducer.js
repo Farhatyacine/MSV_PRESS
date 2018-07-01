@@ -1,12 +1,10 @@
-import { LOGIN_STATUS } from '../actions/types';
+import { SET_USER_TOKEN } from '../actions/types';
 
-export default function(state=null , action){
+export default function(state=null, action){
     switch (action.type){
-        case LOGIN_STATUS :
-            console.log('hani wselt lel reducer');
-            console.log(action.payload);
+        case SET_USER_TOKEN :
             return action.payload;
-        default : 
+        default :
             return state ;
     }
 }
