@@ -6,7 +6,6 @@ import {setUserlogin} from "../actions";
 
 class Header extends Component {
     renderTopBar() {
-        console.log(this.props.loginToken);
         if (this.props.loginToken != null) {
             return (<div className="top-bar">
                 <div className="container">
@@ -34,7 +33,6 @@ class Header extends Component {
     };
 
     renderNavBar() {
-        const authToken = localStorage.getItem(AUTH_TOKEN);
         if (this.props.loginToken != null) {
             return (<nav className="navbar navbar-expand-md  navbar-light bg-light">
                 <div className="container">

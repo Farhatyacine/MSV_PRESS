@@ -45,7 +45,7 @@ class Login extends Component {
                             <h3 className="text-center">Welcome</h3>
                             <img
                                 src={`${process.env.PUBLIC_URL}/images/logo.png`}
-                                className="rounded mx-auto d-block col-sm-3"
+                                className="rounded mx-auto d-block col-sm-3" alt="logo"
                             />
                             <br/>
 

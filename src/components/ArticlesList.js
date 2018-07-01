@@ -1,71 +1,67 @@
 import React, {Component} from 'react';
-import {Query} from "react-apollo";
+import {graphql} from "react-apollo";
 import gql from "graphql-tag";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {AUTH_TOKEN} from "../actions/types";
 
 class ArticlesList extends Component {
+    _fetch = async () => {
+        const result = await this.props.getAllAtricle;
+        const {allPressArticles} = result;
+        allPressArticles !== undefined ? localStorage.setItem("allPressArticles", JSON.stringify(allPressArticles)) : '';
+    };
+
+    constructor() {
+        super();
+        this.state = {
+            allPressArticles: []
+        };
+    }
+
+    componentWillMount() {
+        this._fetch();
+        this.setState({allPressArticles: JSON.parse(localStorage.getItem("allPressArticles"))});
+    }
+
     renderArticlesList() {
         if (this.props.loginToken == null) {
             this.props.history.push('/login');
-        }else {
-            return (
-                <Query
-                    query={gql`
-                {
-                    allPressArticles {
-                    id
-                    title
-                    description
-                    }
-                }
-                `}
-                >
-                    {({loading, error, data}) => {
-                        if (loading) return <p>Loading...</p>;
-                        if (error) return <p>Error : {error}</p>;
-                        console.log(data);
-                        return data.allPressArticles.map(({id, title, description}) => (
-                            <div key={id} className="col-md-6">
-                                <Link to={{
-                                    pathname: '/singleArticle',
-                                    state: {
-                                        article: {
-                                            id: id,
-                                            title: title,
-                                            description: description
-                                        }
-                                    }
-                                }} className="blog-entry ">
-                                    <img src={`${process.env.PUBLIC_URL}/images/img_5.jpg`} alt="aa"/>
-                                    <div className="blog-content-body">
-                                        <div className="post-meta">
-                                            <span className="category">Food</span>
-                                            <span className="mr-2">March 15, 2018 </span> ;
-                                            <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
-                                        </div>
-                                        <h2>{description}</h2>
-                                    </div>
-                                </Link>
+        } else {
+            return this.state.allPressArticles.map(({id, title, description}) => (
+                <div key={id} className="col-md-6">
+                    <Link to={{
+                        pathname: '/singleArticle',
+                        state: {
+                            article: {
+                                id: id,
+                                title: title,
+                                description: description
+                            }
+                        }
+                    }} className="blog-entry ">
+                        <img src={`${process.env.PUBLIC_URL}/images/img_5.jpg`} alt="aa"/>
+                        <div className="blog-content-body">
+                            <div className="post-meta">
+                                <span className="category">Food</span>
+                                <span className="mr-2">March 15, 2018 </span> ;
+                                <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
                             </div>
-                        ));
-                    }}
-                </Query>
-            );
+                            <h2>{description}</h2>
+                        </div>
+                    </Link>
+                </div>
+            ));
         }
     }
 
 
     render() {
-
         return (
             <div>
                 <section className="site-section pt-5">
                     <div className="container">
                         <div className="row">
                             <div className="col-md-12">
-
                                 <div className="owl-carousel owl-theme home-slider">
                                     <div>
                                         <a href="blog-single.html"
@@ -206,4 +202,16 @@ function mapStateToProps({loginToken}) {
     return {loginToken};
 }
 
-export default connect(mapStateToProps)(ArticlesList);
+const GET_ALL_ARTICLE = gql`
+{
+	allPressArticles{
+    id
+    title
+    description
+    createdAt
+  }
+  
+}`;
+
+export default connect(mapStateToProps, null)(
+    graphql(GET_ALL_ARTICLE, {name: 'getAllAtricle'})(ArticlesList));
