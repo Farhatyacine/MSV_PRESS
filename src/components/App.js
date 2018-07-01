@@ -20,6 +20,7 @@ class App extends Component {
           <BrowserRouter >
           <div>
             <Header/>
+            <Route exact path="/" component={ArticleList} />
             <Route exact path="/home" component={ArticleList} />
             <Route exact path="/login" component={Login} />
             <Footer/>

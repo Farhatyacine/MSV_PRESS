@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import { graphql,Query } from "react-apollo";
+import { graphql,Query, compose } from "react-apollo";
 import gql from "graphql-tag";
 
 class Login extends Component {
@@ -52,6 +52,13 @@ class Login extends Component {
         
 
     }
+    _confirm = async () => {
+        const {  email, password } = this.state
+        
+          const result = await this.props.fetchArticlesmutation();
+          const { data } = result.data
+          console.log(data)
+    }
 
 
   render() {
@@ -100,7 +107,7 @@ class Login extends Component {
                       
                       className="btn btn-outline-primary"
                       
-                      onClick={()=>this.login()}
+                      onClick={()=>this._confirm()}
                     >
                       Login
                     </button>
@@ -115,8 +122,11 @@ class Login extends Component {
   }
 }
 
-const FETCH_ARTICLES =gql`
-{
+
+
+
+  const FETCH_ARTICLES = gql`
+  {
     allPressArticles {
     id
     title
@@ -125,4 +135,15 @@ const FETCH_ARTICLES =gql`
 }
 `
 
-export default (graphql(FETCH_ARTICLES, { name: 'fetchArticles' }))(Login) ;
+const LOGIN_MUTATION = gql`
+  mutation LoginMutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+    }
+  }
+`
+
+export default compose(
+  graphql(FETCH_ARTICLES, { name: 'fetchArticlesmutation' }),
+  graphql(LOGIN_MUTATION, { name: 'loginMutation' }),
+)(Login)

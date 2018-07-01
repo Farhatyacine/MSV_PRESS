@@ -1,9 +1,16 @@
 import React,{Component} from 'react';
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { connect } from 'react-redux';
+
 
 class ArticlesList extends Component{
 
+    componentWillMount(){
+        if (this.props.loginToken==null){
+            this.props.history.push('/login');
+        }
+    }
     renderArticlesList(){
         return(
             <Query
@@ -181,6 +188,9 @@ render(){
 
 }
 
+function mapStateToProps({loginToken}){
+    return {loginToken};
+}
 
 
-export default ArticlesList;
+export default connect(mapStateToProps)(ArticlesList);
