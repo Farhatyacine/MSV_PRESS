@@ -2,19 +2,25 @@ import React, {Component} from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import {BrowserRouter, Route} from "react-router-dom";
+import {connect} from 'react-redux';
 import ArticleList from './ArticlesList';
 import Login from './Login';
 import SingleArticle from './SingleArticle';
 
 import ApolloClient from "apollo-boost";
 import {ApolloProvider} from "react-apollo";
+import {AUTH_TOKEN} from "../actions/types";
+import {setUserlogin} from "../actions";
 
 const client = new ApolloClient({
     uri: "https://dev.api.monsupervoisin.fr/graphql"
 });
 
 class App extends Component {
+
+
     render() {
+        window.addEventListener("beforeunload", this.props.setUserlogin(localStorage.getItem(AUTH_TOKEN)));
         return (
             <ApolloProvider client={client}>
                 <BrowserRouter>
@@ -32,4 +38,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default connect(null,{setUserlogin})(App);

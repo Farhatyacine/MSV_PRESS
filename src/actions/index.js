@@ -9,6 +9,7 @@ export function fetchAllArticles(articles){
 
 
 export const setUserlogin = (token) => async dispatch => {
+    console.log('I am in sety user login');
     dispatch({
         type : SET_USER_TOKEN,
         payload : token

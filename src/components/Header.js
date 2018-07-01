@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {Link,withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {AUTH_TOKEN} from "../actions/types";
+import {setUserlogin} from "../actions";
 
 class Header extends Component {
     renderTopBar() {
-        const authToken = localStorage.getItem(AUTH_TOKEN);
-        console.log(authToken);
-        if (!authToken.includes(null)) {
+        console.log(this.props.loginToken);
+        if (this.props.loginToken != null) {
             return (<div className="top-bar">
                 <div className="container">
                     <div className="row">
@@ -29,12 +29,13 @@ class Header extends Component {
 
     _signOut = () => {
         localStorage.setItem(AUTH_TOKEN, null);
+        this.props.setUserlogin(null);
         this.props.history.push('/login');
     };
 
     renderNavBar() {
         const authToken = localStorage.getItem(AUTH_TOKEN);
-        if (!authToken.includes(null)) {
+        if (this.props.loginToken != null) {
             return (<nav className="navbar navbar-expand-md  navbar-light bg-light">
                 <div className="container">
 
@@ -85,4 +86,4 @@ function mapStateToprops({loginToken}) {
     return {loginToken}
 }
 
-export default connect(mapStateToprops)(withRouter(Header));
+export default connect(mapStateToprops,{setUserlogin})(withRouter(Header));

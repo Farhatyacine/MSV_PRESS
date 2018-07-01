@@ -7,10 +7,9 @@ import {AUTH_TOKEN} from "../actions/types";
 
 class ArticlesList extends Component {
     renderArticlesList() {
-        const authToken = localStorage.getItem(AUTH_TOKEN);
-        if (authToken.includes(null)) {
+        if (this.props.loginToken == null) {
             this.props.history.push('/login');
-        } else {
+        }else {
             return (
                 <Query
                     query={gql`
