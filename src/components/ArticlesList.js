@@ -27,7 +27,6 @@ class ArticlesList extends Component{
                 {({ loading, error, data }) => {
                 if (loading) return <p>Loading...</p>;
                 if (error) return <p>Error :(</p>;
-                console.log(data);
                 return data.allPressArticles.map(({ id, title , description }) => (
                     <div key={id} className="col-md-6">
                         <a href="blog-single.html" className="blog-entry " >

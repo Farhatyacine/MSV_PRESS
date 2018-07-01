@@ -1,21 +1,12 @@
 import React,{Component} from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
 class Header extends Component{
 
 
-    applyMiddleware(){
-    
-        console.log(this.props.loginToken);
-        console.log('heeeesdjgyckdsgcksdlk');
-        
-
-    }
+   
 
     render(){
-        {this.applyMiddleware()}
         return (
 
             <header role="banner">
@@ -61,7 +52,7 @@ class Header extends Component{
                         </li>
                         
                         <li className="nav-item">
-                            <Link to={"/login"} className="nav-link" >New Article</Link>
+                            <Link to={"/newarticle"} className="nav-link" >New Article</Link>
                         </li>
                         
                         </ul>

@@ -4,6 +4,8 @@ import Header from './Header';
 import { BrowserRouter, Route } from "react-router-dom";
 import ArticleList from './ArticlesList';
 import Login from './Login';
+import NewArticleForm from './NewArticleForm';
+
 
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
@@ -20,6 +22,7 @@ class App extends Component {
           <BrowserRouter >
           <div>
             <Header/>
+            <Route exact path="/newarticle" component={NewArticleForm} />
             <Route exact path="/" component={ArticleList} />
             <Route exact path="/home" component={ArticleList} />
             <Route exact path="/login" component={Login} />
