@@ -5,10 +5,11 @@ import {createStore, applyMiddleware} from 'redux';
 import reduxThunk from 'redux-thunk';
 
 import App from './components/App';
-import reducers from './reducers';
-import registerServiceWorker from './registerServiceWorker';
+import reducers from './Reducers';
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
-ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'));
-registerServiceWorker();
+ReactDOM.render(
+    <Provider store={store}><App/></Provider>,
+    document.querySelector('#root')
+);
