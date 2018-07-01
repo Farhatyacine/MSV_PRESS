@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {graphql} from "react-apollo";
 import gql from "graphql-tag";
+import _ from "lodash";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
@@ -27,7 +28,7 @@ class ArticlesList extends Component {
         if (this.props.loginToken == null) {
             this.props.history.push('/login');
         } else {
-            return this.state.allPressArticles.map(({id, title, description}) => (
+            return this.state.allPressArticles.map(({id, title, description, createdAt}) => (
                 <div key={id} className="col-md-6">
                     <Link to={{
                         pathname: '/singleArticle',
@@ -42,15 +43,34 @@ class ArticlesList extends Component {
                         <img src={`${process.env.PUBLIC_URL}/images/img_5.jpg`} alt="aa"/>
                         <div className="blog-content-body">
                             <div className="post-meta">
-                                <span className="category">Food</span>
-                                <span className="mr-2">March 15, 2018 </span> ;
-                                <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
+                                <h4>{title}</h4>
+                                <span className="mr-2">{new Date(createdAt).toDateString()}</span>
                             </div>
-                            <h2>{description}</h2>
                         </div>
                     </Link>
                 </div>
             ));
+        }
+    }
+
+    renderRecentArticles() {
+        if (this.props.loginToken == null) {
+            this.props.history.push('/login');
+        } else {
+            const sorted = _.sortBy(this.state.allPressArticles, this.state.allPressArticles.createdAt);
+            const recentArticles = [sorted[0], sorted[1], sorted[2]];
+            return recentArticles.map(({id, title, createdAt}) => (
+                <div key={id} className="col-md-6 col-lg-4">
+                    <a href="blog-single.html" className="a-block d-flex align-items-center height-md"
+                       style={{backgroundImage: "url('images/img_4.jpg')"}}>
+                        <div className="text">
+                            <div className="post-meta">
+                                <span className="mr-2">{new Date(createdAt).toDateString()}</span>
+                            </div>
+                            <h3>{title}</h3>
+                        </div>
+                    </a>
+                </div>));
         }
     }
 
@@ -119,45 +139,7 @@ class ArticlesList extends Component {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-md-6 col-lg-4">
-                                <a href="blog-single.html" className="a-block d-flex align-items-center height-md"
-                                   style={{backgroundImage: "url('images/img_2.jpg')"}}>
-                                    <div className="text">
-                                        <div className="post-meta">
-                                            <span className="category">Lifestyle</span>
-                                            <span className="mr-2">March 15, 2018 </span>
-                                            <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
-                                        </div>
-                                        <h3>There’s a Cool New Way for Men to Wear Socks and Sandals</h3>
-                                    </div>
-                                </a>
-                            </div>
-                            <div className="col-md-6 col-lg-4">
-                                <a href="blog-single.html" className="a-block d-flex align-items-center height-md"
-                                   style={{backgroundImage: "url('images/img_3.jpg')"}}>
-                                    <div className="text">
-                                        <div className="post-meta">
-                                            <span className="category">Travel</span>
-                                            <span className="mr-2">March 15, 2018 </span>
-                                            <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
-                                        </div>
-                                        <h3>There’s a Cool New Way for Men to Wear Socks and Sandals</h3>
-                                    </div>
-                                </a>
-                            </div>
-                            <div className="col-md-6 col-lg-4">
-                                <a href="blog-single.html" className="a-block d-flex align-items-center height-md"
-                                   style={{backgroundImage: "url('images/img_4.jpg')"}}>
-                                    <div className="text">
-                                        <div className="post-meta">
-                                            <span className="category">Food</span>
-                                            <span className="mr-2">March 15, 2018 </span>
-                                            <span className="ml-2"><span className="fa fa-comments"></span> 3</span>
-                                        </div>
-                                        <h3>There’s a Cool New Way for Men to Wear Socks and Sandals</h3>
-                                    </div>
-                                </a>
-                            </div>
+                            {this.renderRecentArticles()}
                         </div>
                     </div>
                 </section>

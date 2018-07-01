@@ -8,6 +8,7 @@
     "axios": "^0.18.0",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
+    "lodash": "^4.17.10",
     "materialize-css": "^0.100.2",
     "react": "^16.4.1",
     "react-apollo": "^2.1.8",
