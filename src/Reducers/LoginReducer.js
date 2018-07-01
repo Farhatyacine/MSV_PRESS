@@ -1,11 +1,10 @@
-import {  SET_USER_TOKEN } from '../actions/types';
+import { SET_USER_TOKEN } from '../actions/types';
 
-export default function(state="wkufh", action){
+export default function(state=null, action){
     switch (action.type){
-        case SET_USER_TOKEN :    
-            return state;
-            
-        default : 
+        case SET_USER_TOKEN :
+            return action.payload;
+        default :
             return state ;
     }
 }
