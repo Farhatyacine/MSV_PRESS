@@ -2,8 +2,15 @@ import React, {Component} from 'react';
 import {Query} from "react-apollo";
 import gql from "graphql-tag";
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 class ArticlesList extends Component {
+
+    componentWillMount() {
+        if (this.props.loginToken == null) {
+            this.props.history.push('/login');
+        }
+    }
 
     renderArticlesList() {
         return (
@@ -26,11 +33,13 @@ class ArticlesList extends Component {
                         <div key={id} className="col-md-6">
                             <Link to={{
                                 pathname: '/singleArticle',
-                                state: {article: {
-                                    id: id,
+                                state: {
+                                    article: {
+                                        id: id,
                                         title: title,
                                         description: description
-                                    }}
+                                    }
+                                }
                             }} className="blog-entry ">
                                 <img src={`${process.env.PUBLIC_URL}/images/img_5.jpg`} alt=""/>
                                 <div className="blog-content-body">
@@ -195,5 +204,8 @@ class ArticlesList extends Component {
     }
 }
 
+function mapStateToProps({loginToken}) {
+    return {loginToken};
+}
 
-export default ArticlesList;
+export default connect(mapStateToProps)(ArticlesList);

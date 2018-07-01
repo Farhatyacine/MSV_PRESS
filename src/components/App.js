@@ -16,11 +16,11 @@ const client = new ApolloClient({
 class App extends Component {
     render() {
         return (
-
             <ApolloProvider client={client}>
                 <BrowserRouter>
                     <div>
                         <Header/>
+                        <Route exact path="/" component={ArticleList}/>
                         <Route exact path="/home" component={ArticleList}/>
                         <Route exact path="/login" component={Login}/>
                         <Route exact path="/singleArticle" component={SingleArticle}/>
@@ -28,8 +28,6 @@ class App extends Component {
                     </div>
                 </BrowserRouter>
             </ApolloProvider>
-
-
         );
     }
 }
