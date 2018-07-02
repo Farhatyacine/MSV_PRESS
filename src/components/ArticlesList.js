@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import _ from "lodash";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import classnames from 'classnames';
 
 class ArticlesList extends Component {
     _fetch = async () => {
@@ -15,8 +16,14 @@ class ArticlesList extends Component {
     constructor() {
         super();
         this.state = {
-            allPressArticles: []
+            allPressArticles: [],
+            currentPage: 1,
+            articlePerPage: 5,
+            active: ''
         };
+        this.handleClick = this.handleClick.bind(this);
+        this.handleNext = this.handleNext.bind(this);
+        this.handlePrevious = this.handlePrevious.bind(this);
     }
 
     componentWillMount() {
@@ -24,11 +31,56 @@ class ArticlesList extends Component {
         this.setState({allPressArticles: JSON.parse(localStorage.getItem("allPressArticles"))});
     }
 
+    handleClick(event) {
+        this.setState({
+            currentPage: Number(event.target.id),
+            active: 'active'
+        });
+    }
+
+    handleNext(event) {
+        const number = Math.ceil(this.state.allPressArticles.length / this.state.articlePerPage);
+        this.setState({
+            currentPage: (this.state.currentPage + 1) <= number ? this.state.currentPage + 1 : number,
+            active: 'active'
+        });
+    }
+
+    handlePrevious(event) {
+        this.setState({
+            currentPage: (this.state.currentPage - 1) >= 1 ? this.state.currentPage - 1 : 1,
+            active: 'active'
+        });
+    }
+
+    renderPageNumber() {
+        const {allPressArticles, articlePerPage} = this.state;
+
+        const pageNumbers = [];
+        for (let i = 1; i <= Math.ceil(allPressArticles.length / articlePerPage); i++) {
+            pageNumbers.push(i);
+        }
+
+        return pageNumbers.map(number => {
+            let classes = classnames('page-item', this.state.currentPage === number ? 'active' : '');
+            return (
+                <li key={number} className={classes}><a id={number} onClick={this.handleClick}
+                                                        className="page-link">{number}</a></li>
+            );
+        });
+    }
+
     renderArticlesList() {
         if (this.props.loginToken == null) {
             this.props.history.push('/login');
         } else {
-            return this.state.allPressArticles.map(({id, title, description, createdAt}) => (
+            const {allPressArticles, currentPage, articlePerPage} = this.state;
+
+            const indexOfLastProduct = currentPage * articlePerPage;
+            const indexOfFirstProduct = indexOfLastProduct - articlePerPage;
+            const currentProducts = allPressArticles.slice(indexOfFirstProduct, indexOfLastProduct);
+
+            return currentProducts.map(({id, title, description, createdAt}) => (
                 <div key={id} className="col-md-6">
                     <Link to={{
                         pathname: '/singleArticle',
@@ -59,17 +111,26 @@ class ArticlesList extends Component {
         } else {
             const sorted = _.sortBy(this.state.allPressArticles, this.state.allPressArticles.createdAt);
             const recentArticles = [sorted[0], sorted[1], sorted[2]];
-            return recentArticles.map(({id, title, createdAt}) => (
+            return recentArticles.map(({id, title, description, createdAt}) => (
                 <div key={id} className="col-md-6 col-lg-4">
-                    <a href="blog-single.html" className="a-block d-flex align-items-center height-md"
-                       style={{backgroundImage: "url('images/img_4.jpg')"}}>
+                    <Link to={{
+                        pathname: '/singleArticle',
+                        state: {
+                            article: {
+                                id: id,
+                                title: title,
+                                description: description
+                            }
+                        }
+                    }} className="a-block d-flex align-items-center height-md"
+                          style={{backgroundImage: "url('images/img_4.jpg')"}}>
                         <div className="text">
                             <div className="post-meta">
                                 <span className="mr-2">{new Date(createdAt).toDateString()}</span>
                             </div>
                             <h3>{title}</h3>
                         </div>
-                    </a>
+                    </Link>
                 </div>));
         }
     }
@@ -160,12 +221,11 @@ class ArticlesList extends Component {
                                     <div className="col-md-12 text-center">
                                         <nav aria-label="Page navigation" className="text-center">
                                             <ul className="pagination">
-                                                <li className="page-item  active"><a className="page-link"
-                                                                                     href="">Prev</a></li>
-                                                <li className="page-item"><a className="page-link" href="">1</a></li>
-                                                <li className="page-item"><a className="page-link" href="">2</a></li>
-                                                <li className="page-item"><a className="page-link" href="">3</a></li>
-                                                <li className="page-item"><a className="page-link" href="">Next</a></li>
+                                                <li className="page-item"><a className="page-link"
+                                                                             onClick={this.handlePrevious}>Prev</a></li>
+                                                {this.renderPageNumber()}
+                                                <li className="page-item"><a className="page-link"
+                                                                             onClick={this.handleNext}>Next</a></li>
                                             </ul>
                                         </nav>
                                     </div>
