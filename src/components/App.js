@@ -12,7 +12,7 @@ import {ApolloProvider} from "react-apollo";
 import {AUTH_TOKEN} from "../actions/types";
 import {setUserlogin} from "../actions";
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
     uri: "https://dev.api.monsupervoisin.fr/graphql"
 });
 

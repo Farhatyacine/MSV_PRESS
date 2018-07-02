@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
-import {graphql} from "react-apollo";
 import gql from "graphql-tag";
 import _ from "lodash";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import {client} from "./App";
 
 class ArticlesList extends Component {
     _fetch = async () => {
-        const result = await this.props.getAllAtricle;
-        const {allPressArticles} = result;
-        allPressArticles !== undefined ? localStorage.setItem("allPressArticles", JSON.stringify(allPressArticles)) : '';
+        const result = await client.query({
+            query: getAllArticle,
+            variables: {enabled: true}
+        });
+        const {allPressArticles} = result.data;
+        this.setState({allPressArticles});
     };
 
     constructor() {
@@ -28,7 +31,6 @@ class ArticlesList extends Component {
 
     componentWillMount() {
         this._fetch();
-        this.setState({allPressArticles: JSON.parse(localStorage.getItem("allPressArticles"))});
     }
 
     handleClick(event) {
@@ -137,7 +139,7 @@ class ArticlesList extends Component {
 
 
     render() {
-        return (
+        return this.state.allPressArticles.length ?
             <div>
                 <section className="site-section pt-5">
                     <div className="container">
@@ -236,7 +238,7 @@ class ArticlesList extends Component {
                     </div>
                 </section>
             </div>
-        );
+            : <span>Loading...</span>;
     }
 }
 
@@ -244,16 +246,15 @@ function mapStateToProps({loginToken}) {
     return {loginToken};
 }
 
-const GET_ALL_ARTICLE = gql`
-{
-	allPressArticles{
+const getAllArticle = gql`
+query AllPressArticle($enabled: Boolean) {
+  allPressArticles(enabled: $enabled) {
     id
     title
     description
     createdAt
   }
-  
-}`;
+}
+`;
 
-export default connect(mapStateToProps, null)(
-    graphql(GET_ALL_ARTICLE, {name: 'getAllAtricle'})(ArticlesList));
+export default connect(mapStateToProps, null)(ArticlesList);

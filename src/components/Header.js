@@ -1,20 +1,25 @@
 import React, {Component} from 'react';
-import {Link,withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {AUTH_TOKEN} from "../actions/types";
 import {setUserlogin} from "../actions";
 
 class Header extends Component {
+    _signOut = () => {
+        localStorage.setItem(AUTH_TOKEN, null);
+        this.props.setUserlogin(null);
+        this.props.history.push('/login');
+    };
+
     renderTopBar() {
         if (this.props.loginToken != null) {
             return (<div className="top-bar">
                 <div className="container">
                     <div className="row">
-                        <div className="col-4 search-top">
-                            <form action="#" className="search-top-form">
-                                <input type="text" id="s" placeholder="Type keyword to search..."/>
-                                <span className="icon fa fa-search"></span>
-                            </form>
+                        <div className="col-4 social">
+                            <a href="https://twitter.com/MonSuperVoisin" target={'_blank'}><span className="fa fa-twitter"></span></a>
+                            <a href="https://www.facebook.com/monsupervoisin/" target={'_blank'}><span className="fa fa-facebook"></span></a>
+                            <a href="https://www.monsupervoisin.fr/" target={'_blank'}><span className="fa fa-safari" target={'_blank'}></span></a>
                         </div>
                         <div className="col-5"></div>
                         <div className="col-3 social">
@@ -25,12 +30,6 @@ class Header extends Component {
             </div>);
         }
     }
-
-    _signOut = () => {
-        localStorage.setItem(AUTH_TOKEN, null);
-        this.props.setUserlogin(null);
-        this.props.history.push('/login');
-    };
 
     renderNavBar() {
         if (this.props.loginToken != null) {
@@ -84,4 +83,4 @@ function mapStateToprops({loginToken}) {
     return {loginToken}
 }
 
-export default connect(mapStateToprops,{setUserlogin})(withRouter(Header));
+export default connect(mapStateToprops, {setUserlogin})(withRouter(Header));
